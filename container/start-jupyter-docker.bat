@@ -1,0 +1,1 @@
+start bash ./start-jupyter-docker.sh
