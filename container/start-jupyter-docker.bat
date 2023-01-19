@@ -1,1 +1,2 @@
-start bash ./start-jupyter-docker.sh
+cd /D "%~dp0"
+start wsl ./start-jupyter-docker.sh

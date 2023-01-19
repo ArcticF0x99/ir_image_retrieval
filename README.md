@@ -11,6 +11,8 @@ also the submodule **touche-code**.
 Make sure that Docker Desktop is installed with WSL. Then execute the 
 `container/start-jupyter-docker.bat` file.
 
+Oder `start wsl ./start-jupyter-docker.sh`
+
 ## Explanation of data structure
 
 Data of datset from last year should be saved in `container/dataset22`.
