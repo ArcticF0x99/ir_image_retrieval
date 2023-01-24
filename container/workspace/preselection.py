@@ -7,6 +7,7 @@ from tqdm import tqdm
 from glob import glob
 from pathlib import Path
 from typing import List, Tuple
+import shutil
 
 SYSTEM_NAME = os.environ.get('TIRA_SYSTEM_NAME' ,'my-retrieval-system')
 
@@ -30,8 +31,9 @@ def __all_images():
         yield {'docno': image_id, 'text': __load_image_text(image_id)}
 
 
-#!rm -Rf ./index
+shutil.rmtree('./index')
 iter_indexer = pt.IterDictIndexer("./index", meta={'docno': 20, 'text': 4096})
+
 index_ref = iter_indexer.index(tqdm(__all_images()))
 retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
 
