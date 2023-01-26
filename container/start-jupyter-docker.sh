@@ -1,5 +1,5 @@
 #!/bin/bash
-docker run --rm -ti \
+docker run --rm -ti --gpus=all \
     -p 8888:8888 \
     -v "${PWD}/touche-code/clef23/image-retrieval-for-arguments/baseline-pyterrier:/workspace/baseline" \
     -v "${PWD}/dataset22:/workspace/dataset22" \
