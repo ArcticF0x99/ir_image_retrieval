@@ -30,12 +30,12 @@ def __all_images():
         image_id = i.split('/')[-1]
         yield {'docno': image_id, 'text': __load_image_text(image_id)}
 
-
-shutil.rmtree('./index')
-iter_indexer = pt.IterDictIndexer("./index", meta={'docno': 20, 'text': 4096})
-
-index_ref = iter_indexer.index(tqdm(__all_images()))
-retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
+if os.path.exists("./index"):
+    retrieval_pipeline = pt.BatchRetrieve("./index", wmodel="BM25", verbose=True, num_results=50)
+else:
+    iter_indexer = pt.IterDictIndexer("./index", meta={'docno': 20, 'text': 4096})
+    index_ref = iter_indexer.index(tqdm(__all_images()))
+    retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
 
 def retrieve(queries : List[Tuple[str, int]]) -> pd.DataFrame:
     queries = pd.DataFrame(queries, columns=['query', 'qid'])
