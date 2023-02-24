@@ -2,6 +2,8 @@ from typing import List, Tuple
 import spacy
 from wordfreq import zipf_frequency
 
+
+spacy.cli.download("en_core_web_lg")
 nlp = spacy.load('en_core_web_lg')
 
 def generate_phrases(topics : List[str], method : str) -> Tuple[List[str], List[str]]:

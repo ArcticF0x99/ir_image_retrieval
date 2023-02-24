@@ -11,11 +11,13 @@ import shutil
 
 SYSTEM_NAME = os.environ.get('TIRA_SYSTEM_NAME' ,'my-retrieval-system')
 
+YEAR = 23
+
 if not pt.started():
     # tira_utils above should already have done started pyterrier with this configuration to ensure that no internet connection is required (for reproducibility)
     pt.init(version=os.environ['PYTERRIER_VERSION'], helper_version=os.environ['PYTERRIER_HELPER_VERSION'], no_download=True)
 
-input_directory, output_directory = get_input_directory_and_output_directory(default_input='/workspace/dataset22/')
+input_directory, output_directory = get_input_directory_and_output_directory(default_input=f'/workspace/dataset{YEAR}/')
 
 def __load_image_text(image_id):
     ret = ''
@@ -30,10 +32,10 @@ def __all_images():
         image_id = i.split('/')[-1]
         yield {'docno': image_id, 'text': __load_image_text(image_id)}
 
-if os.path.exists("./index"):
-    retrieval_pipeline = pt.BatchRetrieve("./index", wmodel="BM25", verbose=True, num_results=50)
+if os.path.exists(f"./index{YEAR}"):
+    retrieval_pipeline = pt.BatchRetrieve(f"./index{YEAR}", wmodel="BM25", verbose=True, num_results=50)
 else:
-    iter_indexer = pt.IterDictIndexer("./index", meta={'docno': 20, 'text': 4096})
+    iter_indexer = pt.IterDictIndexer(f"./index{YEAR}", meta={'docno': 27, 'text': 4096})
     index_ref = iter_indexer.index(tqdm(__all_images()))
     retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
 
