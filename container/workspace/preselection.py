@@ -17,7 +17,7 @@ if not pt.started():
     # tira_utils above should already have done started pyterrier with this configuration to ensure that no internet connection is required (for reproducibility)
     pt.init(version=os.environ['PYTERRIER_VERSION'], helper_version=os.environ['PYTERRIER_HELPER_VERSION'], no_download=True)
 
-input_directory, output_directory = get_input_directory_and_output_directory(default_input=f'/workspace/dataset{YEAR}/')
+input_directory, _ = get_input_directory_and_output_directory(default_input=f'/workspace/dataset{YEAR}/')
 
 def __load_image_text(image_id):
     ret = ''
@@ -35,7 +35,12 @@ def __all_images():
 if os.path.exists(f"./index{YEAR}"):
     retrieval_pipeline = pt.BatchRetrieve(f"./index{YEAR}", wmodel="BM25", verbose=True, num_results=50)
 else:
-    iter_indexer = pt.IterDictIndexer(f"./index{YEAR}", meta={'docno': 27, 'text': 4096})
+    print('Building new index')
+    try:
+        iter_indexer = pt.IterDictIndexer(f"./index{YEAR}", meta={'docno': 27, 'text': 4096})
+    except e:
+        print(f'Error; Dataset directory contains: {glob(input_dir + "/*")}')
+        raise
     index_ref = iter_indexer.index(tqdm(__all_images()))
     retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
 

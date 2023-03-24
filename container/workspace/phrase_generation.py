@@ -4,7 +4,7 @@ from wordfreq import zipf_frequency
 
 try:
   nlp = spacy.load("en_core_web_lg")
-except ModuleNotFoundError:
+except OSError:
   spacy.cli.download("en_core_web_lg")
   nlp = spacy.load("en_core_web_lg")
 
