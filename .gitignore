@@ -1,5 +1,13 @@
-dataset22
+dataset22/
+dataset23/
+dataset23x/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 __pycache__
 .idea
+doccano/
+index23/
+stable-diffusion-v1-4/
+image_results/
+bart-large-mnli/
+stable-diffusion-v1-4
