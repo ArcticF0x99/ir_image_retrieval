@@ -17,20 +17,25 @@ if not pt.started():
     # tira_utils above should already have done started pyterrier with this configuration to ensure that no internet connection is required (for reproducibility)
     pt.init(version=os.environ['PYTERRIER_VERSION'], helper_version=os.environ['PYTERRIER_HELPER_VERSION'], no_download=True)
 
-input_directory, _ = get_input_directory_and_output_directory(default_input=f'/workspace/dataset{YEAR}/')
+input_dir, _ = get_input_directory_and_output_directory(default_input=f'/workspace/dataset{YEAR}/')
 
 def __load_image_text(image_id):
     ret = ''
     
-    for txt_file in glob(input_directory +'/images/' + image_id[:3] + '/' + image_id + '/*/*/*/text.txt'):
+    for txt_file in glob(input_dir +'/images/' + image_id[:3] + '/' + image_id + '/*/*/*/text.txt'):
         ret += '\n\n' + open(txt_file).read()
         
     return ret.strip()
 
 def __all_images():
-    for i in glob(input_directory + '/images/*/*'):
+    is_empty = True
+    for i in glob(input_dir + '/images/*/*'):
+        is_empty = False
         image_id = i.split('/')[-1]
         yield {'docno': image_id, 'text': __load_image_text(image_id)}
+    
+    if is_empty:
+        print(f'No images found! Dataset directory contains: {glob(input_dir + "/*")}')
 
 if os.path.exists(f"./index{YEAR}"):
     retrieval_pipeline = pt.BatchRetrieve(f"./index{YEAR}", wmodel="BM25", verbose=True, num_results=50)
@@ -38,10 +43,10 @@ else:
     print('Building new index')
     try:
         iter_indexer = pt.IterDictIndexer(f"./index{YEAR}", meta={'docno': 27, 'text': 4096})
-    except e:
+    except:
         print(f'Error; Dataset directory contains: {glob(input_dir + "/*")}')
         raise
-    index_ref = iter_indexer.index(tqdm(__all_images()))
+    index_ref = iter_indexer.index(tqdm(__all_images()))    
     retrieval_pipeline = pt.BatchRetrieve(index_ref, wmodel="BM25", verbose=True, num_results=50)
 
 def retrieve(queries : List[Tuple[str, int]]) -> pd.DataFrame:

@@ -12,4 +12,5 @@ COPY workspace/bart-large-mnli /workspace/bart-large-mnli
 COPY workspace/*.py /workspace
 COPY workspace/*.ipynb /workspace
 
-ENV MAX_QUERIES 3
+ENV MAX_QUERIES 100
+ENV PIPELINE_ID 3

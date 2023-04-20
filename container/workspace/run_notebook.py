@@ -26,7 +26,7 @@ def main(args):
     
     if args.local_dry_run:
         network = '' if args.enable_network_in_dry_run else '--network=none'
-        command = f'docker run --rm -ti {network} -v {args.input}:/input-in-container -v {args.output}:/output-in-container {args.image_for_dry_run} /workspace/run-notebook.py --notebook {args.notebook} --input /input-in-container --output /output-in-container'
+        command = f'docker run --rm -ti --gpus=all {network} -v {args.input}:/input-in-container -v {args.output}:/output-in-container {args.image_for_dry_run} /workspace/run-notebook.py --notebook {args.notebook} --input /input-in-container --output /output-in-container'
         print(f'Execute dry run in docker. The command is:\n\n\t{command}\n\n')
     
     subprocess.check_call(command, shell=True, stdout=sys.stdout, stderr=subprocess.STDOUT)
