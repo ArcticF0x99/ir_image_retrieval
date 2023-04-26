@@ -13,4 +13,4 @@ COPY workspace/*.py /workspace
 COPY workspace/*.ipynb /workspace
 
 ENV MAX_QUERIES 100
-ENV PIPELINE_ID 3
+ENV PIPELINE_ID -1
